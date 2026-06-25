@@ -29,8 +29,8 @@ export function optionalEnv(name: string, fallback = ""): string {
 /** Nano Banana Pro = Gemini 3 Pro Image. Pin the id; the -preview suffix is the verified-working one. */
 export const IMAGE_MODEL = optionalEnv("IMAGE_MODEL", "gemini-3-pro-image-preview");
 
-/** ElevenLabs TTS model. multilingual_v2 is the safe default; v3 is more expressive. */
-export const TTS_MODEL = optionalEnv("ELEVENLABS_TTS_MODEL", "eleven_multilingual_v2");
+/** ElevenLabs TTS model. eleven_v3 = most expressive (70+ langs, ~5k char/request). */
+export const TTS_MODEL = optionalEnv("ELEVENLABS_TTS_MODEL", "eleven_v3");
 
 /** Claude model used for script assistance. */
 export const SCRIPT_MODEL = optionalEnv("SCRIPT_MODEL", "claude-sonnet-4-6");
