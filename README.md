@@ -39,7 +39,7 @@ Voice → MP3 (ElevenLabs) ──────────┴─→ HeyGen Avatar
 ### 1. Install
 
 ```bash
-npm install
+bun install
 ```
 
 ### 2. Supabase
@@ -73,7 +73,7 @@ cp .env.example .env.local
 ### 5. Run
 
 ```bash
-npm run dev   # http://localhost:3000
+bun run dev   # http://localhost:3000
 ```
 
 In local dev, leaving `APP_ACCESS_SECRET` empty disables the gate. Set it to test login.
@@ -100,7 +100,7 @@ The `_smoke` route is throwaway — delete `app/api/_smoke/` before launch.
 
 ### Full flow
 
-`npm run dev` → create a character (image generates + saves) → draft/edit a script →
+`bun run dev` → create a character (image generates + saves) → draft/edit a script →
 audition + pick a voice → **Roll camera** → watch the take move `Rolling → Ready`, then
 play and download the stored MP4.
 
@@ -127,7 +127,11 @@ These were synthesised from current docs but flagged as version-sensitive:
 Single-user + platform-funded keys + a public URL = an exposed wallet. Defences:
 
 - **Access gate** (`proxy.ts`): requires the `APP_ACCESS_SECRET` cookie for every page/API.
-  Fails **closed** in production if the secret isn't set.
+  Fails **closed** in production if the secret isn't set. The cookie stores a SHA-256-derived
+  token (never the raw secret), comparisons are constant-time (`lib/gate.ts`), and the cookie
+  is `httpOnly` + `sameSite=lax` (+ `secure` in prod).
+  *Known v1 limitation:* no login rate-limiting (stateless serverless) — rely on a long random
+  secret and Vercel password protection. Use a real auth provider if this becomes multi-user.
 - **Recommended:** also enable **Vercel deployment password protection** for defence in depth.
 - All API keys are server-side only (`lib/env.ts`); never imported into client components.
 - Storage: `characters` + `videos` buckets are public-read (HeyGen fetches the image by URL;

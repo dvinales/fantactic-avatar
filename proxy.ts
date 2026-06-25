@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { accessToken, safeEqual } from "@/lib/gate";
 
 /**
  * Lightweight access gate (NOT full auth — v1 is single-user).
@@ -28,7 +29,7 @@ export function proxy(req: NextRequest) {
   }
 
   const cookie = req.cookies.get("app_access")?.value;
-  if (cookie && cookie === secret) return NextResponse.next();
+  if (cookie && safeEqual(cookie, accessToken(secret))) return NextResponse.next();
 
   return denied(req);
 }
